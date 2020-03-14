@@ -1,0 +1,124 @@
+const http = require('http');
+const express = require('express');
+const app = express();
+var server = require('http').createServer(app);
+app.get("/", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+const listener = server.listen(process.env.PORT, function() {
+  console.log('Your app is listening on port ' + listener.address().port);
+});
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
+
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+var Donutimage = function(message){
+  message.channel.send({
+  files: ['https://cdn.glitch.com/8d8f3024-a839-4f64-8ba7-b983321509f3%2FDonut1.png?v=1583608903125']})
+}
+
+;
+var changelog = function(message){
+message.channel.send({embed: changelogEmbed});
+}
+var help = function(message){
+message.channel.send({embed: helper});
+}
+var bread = function(message){
+  message.channel.send({
+  files: ['https://cdn.glitch.com/8d8f3024-a839-4f64-8ba7-b983321509f3%2Fcheese%20hopefully.png?v=1583637073958']})
+}
+var servercount = function(message){
+  message.channel.send("watching "+`${client.guilds.cache.size} servers`)
+}
+client.on('message', message => {
+  console.log("\"" + message + "\" has been posted by " + message.author.username);
+  var Message = message.toString();
+  if(Message.startsWith(",")){
+    var fullCmd = Message.slice(1);
+  }
+      if(fullCmd.startsWith("donut")){
+       Donutimage(message);
+      }
+      if(fullCmd.startsWith("changelog")){
+       changelog(message);
+      }
+  if(fullCmd.startsWith("help")){
+       help(message);
+      }
+      if(fullCmd.startsWith("bread")){
+       bread(message);
+      }
+      if(fullCmd.startsWith("servercount")){
+       servercount(message);
+      }
+});
+client.on('ready', () => {
+  console.log(client.user.username + " is ready!");
+});
+client.login(process.env.TOKEN);
+client.on("ready", function() {
+  console.log("I am ready!");
+  client.user.setActivity(`${client.guilds.cache.size} servers`, {type:'WATCHING'});
+});
+app.get("/wakeup", function(request, response) {
+  console.log("i'm awake");
+  response.send("i'm awake")
+});
+const helper = {
+  color:'0xff00d0',
+  title:'Commands',
+  fields:[
+    {
+      name:',donut',
+      value:'Shows a picture of a donut!'
+    },
+    {
+      name:',bread',
+      value:'Shows a picture of bread.',
+    },
+    {
+      name:',changelog',
+      value:'Shows the current version of bot it is and the changes made in that version!'
+    },
+    {
+      name:",servercount",
+      value:"Shows how many servers the bot is in!",
+    },
+    {
+      name:',help',
+      value:'Shows all the current commands',
+    },
+    {
+      name:'If you have any suggestions please dm them to:',
+      value:'Marvthedonut#8174',
+    },
+  ],
+timestamp: new Date(),
+  footer:{
+    text:"Made by Marvthedonut#8174.",
+  icon_url:'https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png'
+  }
+  }
+const changelogEmbed = {
+  color:'0xff00d0',
+  title:'VERSION 1.0.1',
+  fields:[
+    {
+      name:'------------------CHANGELOG-------------------',
+      value:"Updated help menu to a new and improved embed",
+    },
+    {
+      name:'for more understandable view.',
+      value:'Updated change log to embed',
+    }
+  ],
+  footer:{
+    text:"Made by Marvthedonut#8174.",
+    icon_url:'https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png'
+  }
+}
