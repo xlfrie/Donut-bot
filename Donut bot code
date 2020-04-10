@@ -128,8 +128,8 @@ const helpembed = new Discord.MessageEmbed()
   {name: "!marv pfp", value:"Shows Marv's pfp."},
   {name: "!invite", value: "Shows the donut bot's invite link!" },
   {name:"!help", value: "Shows all the current commands."},
-  {name:"If you have any suggestions please dm them to:", value:"Marvthedonut#8174"})
-.setFooter("Made by Marvthedonut#8174.", "https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png")
+  {name:"If you have any suggestions please dm them to:", value:"Marvthedonut#0001"})
+.setFooter("Made by Marvthedonut#0001.", "https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png")
 .setTimestamp();
 const versionEmbed = new Discord.MessageEmbed()
 .setColor("#ff00d0")
@@ -138,4 +138,4 @@ const versionEmbed = new Discord.MessageEmbed()
   {name:"------------------CHANGELOG-----------------------", value:"Fixed issue where the code wouldn't read properly"},
   {name:"\u200B", value:'Added new command "!marv pfp".'})
 .setTimestamp()
-.setFooter("Made by Marvthedonut#8174.","https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png");
+.setFooter("Made by Marvthedonut#0001.","https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png");
