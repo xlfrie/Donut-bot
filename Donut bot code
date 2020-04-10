@@ -12,7 +12,6 @@ const listener = server.listen(process.env.PORT, function() {
 setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
-
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
@@ -24,10 +23,10 @@ var Donutimage = function(message) {
   });
 };
 var changelog = function(message) {
-  message.channel.send({ embed: changelogEmbed });
+  message.channel.send({ embed: versionEmbed });
 };
 var help = function(message) {
-  message.channel.send({ embed: helper });
+  message.channel.send({ embed: helpembed });
 };
 var bread = function(message) {
   message.channel.send({
@@ -36,18 +35,36 @@ var bread = function(message) {
     ]
   });
 };
-var welcomechannel = "";
 var servercount = function(message) {
-  message.channel.send("watching " + `${client.guilds.cache.size} servers`);
+  message.channel.send("Watching " + `${client.guilds.cache.size} servers`);
 };
 client.on("message", message => {
   console.log(
     '"' + message + '" has been posted by ' + message.author.username
   );
   var Message = message.toString();
+  var fullCmd = Message;
   if (Message.startsWith("!")) {
-    var fullCmd = Message.slice(1);
+    fullCmd = Message.slice(1);
+    var argsclear = Message.slice(6);
+    argsclear = parseInt(argsclear);
   }
+    var clearnumberfinal = 1
+  var clearnumber = 5 ;
+      if(fullCmd.startsWith("clear ")){
+        if(message.member.hasPermission("MANAGE_MESSAGES")){
+        clearnumber = argsclear
+          clearnumberfinal = clearnumber + 1
+message.channel.bulkDelete(clearnumberfinal)
+  .then(messages => message.reply(`Deleted ${messages.size} messages!`))
+                      .then(msg => {
+msg.delete({ timeout: 3000 })
+  })
+  .catch(console.error);
+        }else{
+          message.reply("You need the MANAGE_MESSAGES permission!")
+        }
+      }
   if (fullCmd.startsWith("donut")) {
     Donutimage(message);
   }
@@ -60,14 +77,18 @@ client.on("message", message => {
   if (fullCmd.startsWith("bread")) {
     bread(message);
   }
-  if (fullCmd.startsWith("servercount")) {
+  if (fullCmd.startsWith("server count")) {
     servercount(message);
   }
-  if (fullCmd.startsWith("welcome channel set")) {
-    welcomechannel = fullCmd.slice(20);
+  if (fullCmd.startsWith("marv pfp")) {
+    message.channel.send({
+      files: [
+        "https://cdn.glitch.com/8d8f3024-a839-4f64-8ba7-b983321509f3%2FMarv%20invisible.png?v=1584843363711"
+      ]
+    });
   }
-  if (fullCmd.startsWith("welcome channel name")) {
-    message.channel.send(welcomechannel);
+  if (fullCmd.startsWith("invite")) {
+    message.channel.send("The bot invite is: \n https://tiny.cc/donut-bot");
   }
 });
 client.on("ready", () => {
@@ -84,68 +105,37 @@ app.get("/wakeup", function(request, response) {
   console.log("i'm awake");
   response.send("i'm awake");
 });
-const helper = {
-  color: "0xff00d0",
-  title: "Commands",
-  fields: [
-    {
-      name: "!donut",
-      value: "Shows a picture of a donut!"
-    },
-    {
-      name: "!bread",
-      value: "Shows a picture of bread."
-    },
-    {
-      name: "!changelog",
-      value:
-        "Shows the current version of bot it is and the changes made in that version!"
-    },
-    {
-      name: "!servercount",
-      value: "Shows how many servers the bot is in!"
-    },
-    {
-      name: "!help",
-      value: "Shows all the current commands"
-    },
-    {
-      name: "If you have any suggestions please dm them to:",
-      value: "Marvthedonut#8174"
-    }
-  ],
-  timestamp: new Date(),
-  footer: {
-    text: "Made by Marvthedonut#8174.",
-    icon_url:
-      "https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png"
-  }
-};
-const changelogEmbed = {
-  color: "0xff00d0",
-  title: "-------------------VERSION 1.0.1----------------",
-  fields: [
-    {
-      name: "------------------CHANGELOG-----------------------",
-      value: "Updated help menu to a new and improved embed"
-    },
-    {
-      name: "Updated change log to embed.",
-      value: "­"
-    }
-  ],
-  footer: {
-    text: "Made by Marvthedonut#8174.",
-    icon_url:
-      "https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png"
-  }
-};
 client.on("guildMemberAdd", member => {
-  const channel = member.guild.channels.cache.find(
-    ch => ch.name === (welcomechannel)
-  );
+  const channel = member.guild.channels.cache.find(ch => ch.name === "welcome");
   if (!channel) return;
   channel.send(
     `:tada: Welcome to the server, ${member}! Have a great time here in this server!:tada: `
   );
 });
+client.on("guildMemberRemove", member => {
+  const channel = member.guild.channels.cache.find(ch => ch.name === "goodbye");
+  if (!channel) return;
+  channel.send(`:cry: ${member} just left the server. :cry: `);
+});
+const helpembed = new Discord.MessageEmbed()
+.setColor("#ff00d0")
+.setTitle("Commands")
+.addFields(
+  {name: "!donut", value: "Shows a picture of a donut!"},
+  {name: "!bread", value: "Shows a picture of bread."},
+  {name: "!changelog", value:"Shows the current version of bot it is and the changes made in that version!"},
+  {name: "!server count", value:"Shows how many servers the bot is in!", },
+  {name: "!marv pfp", value:"Shows Marv's pfp."},
+  {name: "!invite", value: "Shows the donut bot's invite link!" },
+  {name:"!help", value: "Shows all the current commands."},
+  {name:"If you have any suggestions please dm them to:", value:"Marvthedonut#8174"})
+.setFooter("Made by Marvthedonut#8174.", "https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png")
+.setTimestamp();
+const versionEmbed = new Discord.MessageEmbed()
+.setColor("#ff00d0")
+.setTitle("-------------------VERSION 1.0.2----------------")
+.addFields(
+  {name:"------------------CHANGELOG-----------------------", value:"Fixed issue where the code wouldn't read properly"},
+  {name:"\u200B", value:'Added new command "!marv pfp".'})
+.setTimestamp()
+.setFooter("Made by Marvthedonut#8174.","https://cdn.discordapp.com/attachments/685708095451562027/686061536103497772/Marv_invisible.png");
